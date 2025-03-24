@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Switch } from "@/components/ui/switch"
 import {
   Table,
   TableBody,
@@ -58,7 +57,6 @@ interface StoredWorkouts {
 }
 
 const STORAGE_KEY = 'workoutData'
-const CUSTOM_EXERCISES_KEY = 'customExercises'
 
 const saveToLocalStorage = (data: StoredWorkouts) => {
   if (typeof window !== 'undefined') {
@@ -75,17 +73,7 @@ const loadFromLocalStorage = (): StoredWorkouts => {
 }
 
 const saveCustomExercises = (exercises: string[]) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(CUSTOM_EXERCISES_KEY, JSON.stringify(exercises))
-  }
-}
-
-const loadCustomExercises = (): string[] => {
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem(CUSTOM_EXERCISES_KEY)
-    return stored ? JSON.parse(stored) : []
-  }
-  return []
+  localStorage.setItem('customExercises', JSON.stringify(exercises))
 }
 
 const getLastWorkoutDates = (storedData: StoredWorkouts): { [key: string]: string } => {
@@ -129,7 +117,6 @@ export default function Home() {
       label: name
     }))
   )
-  const [doneExercises, setDoneExercises] = useState<string[]>([])
   const [customExercises, setCustomExercises] = useState<string[]>([])
   const [lastWorkoutDates, setLastWorkoutDates] = useState<{ [key: string]: string }>({})
 
@@ -164,14 +151,9 @@ export default function Home() {
 
   useEffect(() => {
     const storedData = loadFromLocalStorage()
-    setDoneExercises(Object.keys(storedData))
-  }, [])
-
-  useEffect(() => {
-    const loadedCustomExercises = loadCustomExercises()
-    setCustomExercises(loadedCustomExercises)
+    setCustomExercises(Object.keys(storedData))
     setExercises(prev => {
-      const customExerciseOptions = loadedCustomExercises.map(name => ({
+      const customExerciseOptions = Object.keys(storedData).map(name => ({
         value: name,
         label: name
       }))
