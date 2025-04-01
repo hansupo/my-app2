@@ -10,6 +10,8 @@ import { Calendar } from "@/components/ui/calendar"
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 
@@ -30,16 +32,17 @@ export function DatePickerDemo({ date, onDateChange }: DatePickerDemoProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <DialogHeader hidden>
+        <DialogTitle></DialogTitle>
+      </DialogHeader>
       <DialogTrigger asChild>
         <Button
-          variant={"outline"}
-          className={cn(
-            "justify-center w-1/2 text-center font-normal",
-            !selectedDate && "text-muted-foreground"
-          )}
+          variant="ghost"
+          size="sm"
+          className="h-8 w-1/2"
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+          <CalendarIcon className="h-4 w-4 mr-2" />
+          {format(selectedDate, "dd.MM")}
         </Button>
       </DialogTrigger>
       <DialogContent className="w-auto p-2 pt-10">

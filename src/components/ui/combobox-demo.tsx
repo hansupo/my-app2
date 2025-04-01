@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown, Plus, History } from "lucide-react"
+import { Check, ChevronsUpDown, Plus, History, X, ChevronDown } from "lucide-react"
 import { Command as CommandPrimitive } from "cmdk"
 
 import { cn } from "@/lib/utils"
@@ -14,10 +14,11 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer"
 import {
   Dialog,
   DialogContent,
@@ -50,6 +51,7 @@ export function ComboboxDemo({
   const [open, setOpen] = React.useState(false)
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [newExercise, setNewExercise] = React.useState("")
+  const [searchValue, setSearchValue] = React.useState("")
 
   const handleAddExercise = () => {
     if (newExercise.trim()) {
@@ -61,36 +63,58 @@ export function ComboboxDemo({
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-          >
-            {value && options.length > 0
-              ? options.find((option) => option.value === value)?.label
-              : placeholder}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0 m-4">
+      <Button
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        className="w-full justify-between"
+        onClick={() => setOpen(true)}
+      >
+        {value && options.length > 0
+          ? options.find((option) => option.value === value)?.label
+          : placeholder}
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerHeader hidden>
+          <DrawerTitle></DrawerTitle>
+        </DrawerHeader>
+        <DrawerContent className="h-[55vh] border border-accent">
           <CommandPrimitive>
-            <CommandInput placeholder={placeholder} />
-            <CommandList>
+            <div className="relative">
+              <CommandInput 
+                placeholder={placeholder} 
+                value={searchValue}
+                onValueChange={setSearchValue}
+              />
+              {searchValue && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6"
+                  onClick={() => setSearchValue("")}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            <div className="border-b border-accent">
+              <Button
+                variant="ghost"
+                className="w-full h-10 justify-start font-normal gap-0 bg-transparent"
+                onClick={() => {
+                  setOpen(false)
+                  setDialogOpen(true)
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add custom exercise
+              </Button>
+            </div>
+            <CommandList className="overflow-y-auto">
               <CommandEmpty>No option found.</CommandEmpty>
               <CommandGroup>
-                <CommandItem
-                  value="add-custom"
-                  onSelect={() => {
-                    setOpen(false)
-                    setDialogOpen(true)
-                  }}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add custom exercise
-                </CommandItem>
                 {options.map((option) => (
                   <CommandItem
                     key={option.value}
@@ -99,6 +123,7 @@ export function ComboboxDemo({
                       onValueChange(currentValue === value ? "" : currentValue)
                       setOpen(false)
                     }}
+                     className="mt-1"
                   >
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center">
@@ -111,7 +136,7 @@ export function ComboboxDemo({
                         {option.label}
                       </div>
                       {lastWorkoutDates[option.value] && (
-                        <Badge variant="secondary" className="ml-2">
+                        <Badge variant="outline" className="ml-2 border-accent">
                           <History className="h-3 w-3 mr-1" />
                           {lastWorkoutDates[option.value]}
                         </Badge>
@@ -122,8 +147,8 @@ export function ComboboxDemo({
               </CommandGroup>
             </CommandList>
           </CommandPrimitive>
-        </PopoverContent>
-      </Popover>
+        </DrawerContent>
+      </Drawer>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
