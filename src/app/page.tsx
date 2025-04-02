@@ -41,6 +41,7 @@ import { DrawerDemo } from "@/components/ui/drawer-demo"
 import { Bar, BarChart, ResponsiveContainer } from "recharts"
 import { ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { Component } from "@/components/ui/component"
+import { CalendarDemo } from "@/components/ui/calendar-demo"
 
 
 interface WorkoutSet {
@@ -111,6 +112,50 @@ const getLastWorkoutDates = (storedData: StoredWorkouts): { [key: string]: strin
 
   return lastDates
 }
+
+const exportWorkoutData = () => {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (!data) {
+    alert('No workout data to export');
+    return;
+  }
+
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `workout-data-${format(new Date(), 'yyyy-MM-dd')}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+const importWorkoutData = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const content = e.target?.result as string;
+      const parsedData = JSON.parse(content);
+      
+      // Basic validation of the data structure
+      if (typeof parsedData === 'object' && parsedData !== null) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedData));
+        // Refresh the page to load new data
+        window.location.reload();
+      } else {
+        alert('Invalid data format');
+      }
+    } catch (error) {
+      alert('Error reading file');
+      console.error(error);
+    }
+  };
+  reader.readAsText(file);
+};
 
 export default function Home() {
   const [reps, setReps] = useState(8)
@@ -382,20 +427,63 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-between p-4 pt-5 relative w-full h-full overflow-auto pb-28">
-      <div className="w-full my-3 flex flex-row justify-between gap-2 align-middle">
-        <h1 className="text-3xl font-bold">XYM<span className="font-light italic">WORKOUT</span></h1>
-        <ModeToggle></ModeToggle>
-      </div>
-      <div className="flex flex-col items-center gap-4 w-full max-w-3xl mx-auto h-full">
-        <div className="flex items-center gap-4">
-        </div>
+    <main className="flex flex-col items-center justify-between pt-0 relative w-full h-full overflow-hidden">
+
+      <div className="flex flex-col items-center gap-4 w-full p-4 max-w-3xl mx-auto h-full overflow-scroll mb-25">
+
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col h-full">
-          <TabsContent value="home" className="mt-6 overflow-auto">
-            <Component></Component>
+          <TabsContent value="home" className="mt-6 overflow-visible">
+            <div className="w-full mb-12 flex flex-row justify-between gap-2 align-middle ">
+              <h1 className="text-3xl font-bold">XYM<span className="font-light italic">WORKOUT</span></h1>
+              <ModeToggle></ModeToggle>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <Component></Component>
+
+              
+              
+              <div className="border border-accent shadow rounded-lg p-4">
+                <h2 className="text-lg font-semibold mb-4">Data Management</h2>
+                
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <Button 
+                      onClick={exportWorkoutData}
+                      className="w-full"
+                    >
+                      Export Workout Data
+                    </Button>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <input
+                      type="file"
+                      accept=".json"
+                      onChange={importWorkoutData}
+                      className="hidden"
+                      id="import-file"
+                    />
+                    <Button 
+                      onClick={() => document.getElementById('import-file')?.click()}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Import Workout Data
+                    </Button>
+                    <p className="text-sm text-muted-foreground">
+                      Select a previously exported workout data file to import
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full flex justify-center">
+                <CalendarDemo></CalendarDemo>
+              </div>
+            </div>
             <br />
-            <Component></Component>
           </TabsContent>
 
           <TabsContent value="workout" className="mt-6 flex flex-col h-full overflow-auto">
@@ -482,7 +570,7 @@ export default function Home() {
             </div>
           </TabsContent>
 
-          <TabsContent value="history" className="mt-6 pb-30 overflow-visible">
+          <TabsContent value="history" className="mt-6 overflow-visible">
             <History onExerciseSelect={handleExerciseSelect} />
           </TabsContent>
 

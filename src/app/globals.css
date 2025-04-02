@@ -189,6 +189,22 @@
   }
 }
 
+.rdp-day_workout {
+  position: relative;
+  font-weight: 700 ;
+}
+
+.rdp-day_workout::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 4px;
+  height: 4px;
+  background-color: var(--primary);
+  border-radius: 50%;
+}
+
 
 
 
