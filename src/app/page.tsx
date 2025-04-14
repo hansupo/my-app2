@@ -1,12 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 import {
   Table,
   TableBody,
@@ -16,36 +9,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { DatePickerDemo } from "@/components/ui/date-picker-demo"
+
 import { ComboboxDemo } from "@/components/ui/combobox-demo"
 import { useState, useEffect, useCallback } from "react"
 import { format } from "date-fns"
 import exercisesData from '@/public/data/exercises.json'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { History } from "@/components/history"
-import { ModeToggle } from "@/components/ui/mode-toggle"
 import { DrawerDemo } from "@/components/ui/drawer-demo"
-import { Bar, BarChart, ResponsiveContainer } from "recharts"
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { Component } from "@/components/ui/component"
 import { CalendarDemo } from "@/components/ui/calendar-demo"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Settings } from "lucide-react"
 import { SettingsSheet } from "@/components/settings-sheet"
-import { exportWorkoutData, importWorkoutData } from "@/lib/workout-data"
 import { CustomWorkouts } from "@/components/custom-workouts"
 
 
@@ -258,20 +233,6 @@ export default function Home() {
     const newValue = Math.max(0, weight - Number(weightStep))
     setWeight(newValue)
     setWeightInput(String(newValue))
-  }
-
-  const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setRepsInput(value)
-    const numValue = value === "" ? 0 : Number(value)
-    setReps(numValue)
-  }
-
-  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setWeightInput(value)
-    const numValue = value === "" ? 0 : Number(value)
-    setWeight(numValue)
   }
 
   const handleCellClick = (date: string, setIndex: number, value: string) => {
@@ -500,7 +461,6 @@ export default function Home() {
             <div className="w-full px-4 py-4">
               <DrawerDemo
                 isEditing={isEditing}
-                editingSet={editingSet}
                 onLogSet={handleLogSet}
                 selectedDate={selectedDate}
                     onDateChange={(date) => setSelectedDate(date || new Date())}

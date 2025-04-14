@@ -1,13 +1,33 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { ChartTooltip } from "@/components/ui/chart"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { useEffect, useState } from "react"
 
 interface WorkoutData {
   date: string;
   totalWeight: number;
+}
+
+// Define types for the workout data structure
+interface WorkoutSet {
+  value: string;
+  notes?: string;
+}
+
+interface ExerciseWorkout {
+  date: string;
+  sets: WorkoutSet[];
+  defaultValues: {
+    reps: number;
+    weight: number;
+    weightStep: string;
+  };
+}
+
+interface WorkoutDataStorage {
+  [exerciseName: string]: ExerciseWorkout[];
 }
 
 const chartConfig = {
@@ -25,16 +45,16 @@ export function Component() {
     const workoutData = localStorage.getItem('workoutData')
     if (!workoutData) return
 
-    const data = JSON.parse(workoutData)
+    const data = JSON.parse(workoutData) as WorkoutDataStorage
     const weightByDate: { [key: string]: number } = {}
 
     // Process all exercises
-    Object.values(data).forEach((exercises: any) => {
-      exercises.forEach((workout: any) => {
+    Object.values(data).forEach((exercises) => {
+      exercises.forEach((workout) => {
         const date = workout.date
         
         // Calculate total weight for this workout
-        const workoutWeight = workout.sets.reduce((total: number, set: any) => {
+        const workoutWeight = workout.sets.reduce((total: number, set) => {
           const value = typeof set === 'string' ? set : set.value
           const [reps, weight] = value.split('x').map(Number)
           return total + (reps * weight)

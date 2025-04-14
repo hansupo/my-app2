@@ -2,8 +2,28 @@
 
 import * as React from "react"
 import { Calendar } from "@/components/ui/calendar"
-import { DayModifiers } from "react-day-picker"
+import { DayClickEventHandler } from "react-day-picker"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
+// Define types for the workout data structure
+interface WorkoutSet {
+  value: string;
+  notes?: string;
+}
+
+interface ExerciseWorkout {
+  date: string;
+  sets: WorkoutSet[];
+  defaultValues: {
+    reps: number;
+    weight: number;
+    weightStep: string;
+  };
+}
+
+interface WorkoutData {
+  [exerciseName: string]: ExerciseWorkout[];
+}
 
 interface WorkoutDetail {
   exerciseName: string;
@@ -19,7 +39,6 @@ interface WorkoutInfo {
 }
 
 export function CalendarDemo() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
   const [markedDates, setMarkedDates] = React.useState<Date[]>([])
   const [workoutData, setWorkoutData] = React.useState<{ [key: string]: WorkoutInfo }>({})
   const [dialogOpen, setDialogOpen] = React.useState(false)
@@ -30,17 +49,17 @@ export function CalendarDemo() {
     const workoutData = localStorage.getItem('workoutData')
     if (!workoutData) return
 
-    const data = JSON.parse(workoutData)
+    const data = JSON.parse(workoutData) as WorkoutData
     const workoutDates = new Set<string>()
     const weightByDate: { [key: string]: WorkoutInfo } = {}
 
     // Collect all unique dates from all exercises
-    Object.entries(data).forEach(([exerciseName, exercises]: [string, any]) => {
-      exercises.forEach((workout: any) => {
+    Object.entries(data).forEach(([exerciseName, exercises]) => {
+      exercises.forEach((workout) => {
         workoutDates.add(workout.date)
 
         // Calculate total weight for this workout
-        const workoutWeight = workout.sets.reduce((total: number, set: any) => {
+        const workoutWeight = workout.sets.reduce((total: number, set) => {
           const value = typeof set === 'string' ? set : set.value
           const [reps, weight] = value.split('x').map(Number)
           return total + (reps * weight)
@@ -79,7 +98,8 @@ export function CalendarDemo() {
     workout: 'rdp-day_workout'
   }
 
-  const handleDayClick = (day: Date, modifiers: DayModifiers) => {
+  // Removed the unused 'modifiers' parameter
+  const handleDayClick: DayClickEventHandler = (day) => {
     // Format the date with zero-padding for day and month
     const formattedDate = `${String(day.getDate()).padStart(2, '0')}.${String(day.getMonth() + 1).padStart(2, '0')}`
     const workoutInfo = workoutData[formattedDate]

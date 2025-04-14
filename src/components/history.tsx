@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { SquareArrowOutUpRight, SquareMousePointer, Trash2, EllipsisVertical, Share2, FileDown, Trash, Save } from "lucide-react"
+import { SquareArrowOutUpRight, Trash2, EllipsisVertical, Share2, Trash, Save } from "lucide-react"
 import {
   Accordion,
   AccordionContent,

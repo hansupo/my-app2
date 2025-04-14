@@ -2,40 +2,24 @@
 
 import * as React from "react"
 import { Minus, Plus } from "lucide-react"
-import { Bar, BarChart, ResponsiveContainer } from "recharts"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { DatePickerDemo } from "@/components/ui/date-picker-demo"
 import { NotesDialog } from "@/components/ui/notes-dialog"
-import { format } from "date-fns"
 
 import { Button } from "@/components/ui/button"
 import {
     Drawer,
     DrawerClose,
     DrawerContent,
-    DrawerDescription,
     DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 interface DrawerDemoProps {
     isEditing?: boolean;
-    editingSet?: {
-        date: string;
-        setIndex: number;
-        value: string;
-        notes?: string;
-    } | null;
     onLogSet?: () => void;
     selectedDate?: Date;
     onDateChange?: (date: Date | undefined) => void;
@@ -59,7 +43,6 @@ interface DrawerDemoProps {
 
 export function DrawerDemo({
     isEditing = false,
-    editingSet = null,
     onLogSet,
     selectedDate = new Date(),
     onDateChange,

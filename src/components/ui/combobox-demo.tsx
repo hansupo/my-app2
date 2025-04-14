@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown, Plus, History, X, ChevronDown } from "lucide-react"
+import { Check, ChevronsUpDown, Plus, History, X } from "lucide-react"
 import { Command as CommandPrimitive } from "cmdk"
 
 import { cn } from "@/lib/utils"
