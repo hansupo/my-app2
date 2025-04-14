@@ -45,12 +45,13 @@ export function DatePickerDemo({ date, onDateChange }: DatePickerDemoProps) {
           {format(selectedDate, "dd.MM")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-auto p-2 pt-10">
+      <DialogContent className="w-full p-6 pt-12">
         <Calendar
           mode="single"
           selected={selectedDate}
           onSelect={handleDateSelect}
           initialFocus
+          className="w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px]"
         />
       </DialogContent>
     </Dialog>

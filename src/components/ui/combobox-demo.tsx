@@ -65,6 +65,7 @@ export function ComboboxDemo({
     <>
       <Button
         variant="outline"
+        size="lg"
         role="combobox"
         aria-expanded={open}
         className="w-full justify-between"

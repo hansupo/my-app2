@@ -62,8 +62,8 @@ export function Component() {
   }, [])
 
   return (
-    <div className="w-full">
-      <h2 className="text-lg font-semibold mb-4">Total Weight Lifted</h2>
+    <div className="w-full border border-accent rounded-lg p-4">
+      <h2 className="text-lg font-semibold mb-4">Weight Lifted</h2>
       <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
         <BarChart data={chartData}>
           <CartesianGrid vertical={false} strokeDasharray="3 3" />

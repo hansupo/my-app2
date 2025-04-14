@@ -1,0 +1,109 @@
+// Data Schema for Workout Application
+
+// 1. Exercise Logs
+interface ExerciseLog {
+  id: string;                 // Unique identifier for the log
+  datetime: string;           // ISO datetime string
+  exerciseName: string;       // Name of the exercise
+  setNumber: number;          // Which set in sequence
+  reps: number;              // Number of reps performed
+  weight: number;            // Weight used
+  notes?: string;            // Optional notes for the set
+  customWorkoutId?: string;  // Reference to custom workout if part of one
+}
+
+// Storage key: 'exercise_logs'
+// Storage format: ExerciseLog[]
+
+// 2. Custom Workouts
+interface CustomWorkout {
+  id: string;                 // Unique identifier for the workout
+  name: string;               // Name of the custom workout
+  createdAt: string;         // ISO datetime string
+  lastPerformedAt?: string;  // ISO datetime of last performance
+  notes?: string;            // Optional notes for the workout
+  exercises: Exercise[];      // Array of exercises in the workout
+}
+
+interface Exercise {
+  name: string;              // Name of the exercise
+  order: number;             // Order in the workout
+  sets: TargetSet[];         // Target sets for this exercise
+}
+
+interface TargetSet {
+  setNumber: number;         // Which set in sequence
+  targetReps: number;        // Target number of reps
+  targetWeight: number;      // Target weight
+  notes?: string;            // Optional notes for the set
+}
+
+// Storage key: 'custom_workouts'
+// Storage format: CustomWorkout[]
+
+// 3. Exercise Library
+interface ExerciseDefinition {
+  name: string;              // Unique name of the exercise
+  category: string;          // e.g., "Push", "Pull", "Legs"
+  defaultValues: {
+    reps: number;           // Default reps for new sets
+    weight: number;         // Default weight for new sets
+    weightStep: number;     // Increment/decrement step for weight
+  };
+  notes?: string;           // General notes about the exercise
+}
+
+// Storage key: 'exercise_library'
+// Storage format: ExerciseDefinition[]
+
+// Example Usage:
+
+// 1. Logging a regular exercise:
+const exerciseLog = {
+  id: "log_123",
+  datetime: "2024-03-20T14:30:00Z",
+  exerciseName: "Bench Press",
+  setNumber: 1,
+  reps: 8,
+  weight: 60,
+  notes: "Felt strong today"
+}
+
+// 2. Creating a custom workout:
+const customWorkout = {
+  id: "workout_123",
+  name: "Push Day",
+  createdAt: "2024-03-20T10:00:00Z",
+  notes: "Focus on chest and shoulders",
+  exercises: [
+    {
+      name: "Bench Press",
+      order: 1,
+      sets: [
+        { setNumber: 1, targetReps: 8, targetWeight: 60 },
+        { setNumber: 2, targetReps: 8, targetWeight: 62.5 },
+        { setNumber: 3, targetReps: 8, targetWeight: 65 }
+      ]
+    },
+    {
+      name: "Overhead Press",
+      order: 2,
+      sets: [
+        { setNumber: 1, targetReps: 10, targetWeight: 40 },
+        { setNumber: 2, targetReps: 10, targetWeight: 40 }
+      ]
+    }
+  ]
+}
+
+// 3. Defining an exercise:
+const exerciseDefinition = {
+  name: "Bench Press",
+  category: "Push",
+  defaultValues: {
+    reps: 8,
+    weight: 60,
+    weightStep: 2.5
+  },
+  notes: "Keep shoulders retracted and feet planted"
+}
