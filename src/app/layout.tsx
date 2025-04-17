@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "./providers";
 import { cn } from "@/lib/utils";
+import { ThemeMetaUpdater } from "@/components/theme-meta-updater";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -11,7 +12,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#000000",
+  themeColor: "#08080a",
 };
 
 export const metadata: Metadata = {
@@ -31,6 +32,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Define the colors again here for the initial meta tags
+const lightThemeColor = "#ffffff";
+const darkThemeColor = "#08080a";
+
 export default function RootLayout({
   children,
 }: {
@@ -44,10 +49,14 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="XYM Workout" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className={cn("h-full overflow-hidden bg-background font-sans antialiased", GeistSans.variable, GeistMono.variable)}>
-        <div className="h-full flex flex-col">
+      <body className={cn(
+        "h-full bg-background font-sans antialiased",
+        GeistSans.variable,
+        GeistMono.variable
+      )}>
+        <div className="relative h-full max-w-md mx-auto flex flex-col shadow-lg border-x border-border/50 overflow-hidden">
           <Providers>
             <ThemeProvider
               attribute="class"
@@ -55,9 +64,8 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="h-full flex flex-col">
-                {children}
-              </div>
+              <ThemeMetaUpdater />
+              {children}
             </ThemeProvider>
           </Providers>
         </div>

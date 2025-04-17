@@ -23,7 +23,7 @@ export function SettingsSheet() {
                 </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:w-[400px]">
-                <SheetHeader className="pt-7">
+                <SheetHeader className="pt-3">
                     <SheetTitle>
                         <div className="text-xl font-semibold flex justify-center">
                             Settings

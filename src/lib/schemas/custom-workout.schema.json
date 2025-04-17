@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the custom workout"
+    },
+    "date": {
+      "type": "string",
+      "description": "The date when the workout was created/performed (YYYY-MM-DD)"
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "exerciseName": {
+            "type": "string",
+            "description": "Name of the exercise"
+          },
+          "sets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "Must be in format 'RxW' where R is the reps number and W is the weight number (e.g., '10x50' means 10 reps at 50 weight). ONLY numbers are allowed, no 'BW' or text. For bodyweight exercises, estimate the weight in numbers."
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Notes for the set, use empty string if no notes"
+                }
+              },
+              "required": ["value", "notes"],
+              "additionalProperties": false
+            }
+          },
+          "volume": {
+            "type": "number",
+            "description": "Total volume for the exercise (reps × weight × sets). Example: for a set of '10x50', it contributes 500 to the volume (10 reps × 50 weight)"
+          }
+        },
+        "required": ["exerciseName", "sets", "volume"],
+        "additionalProperties": false
+      }
+    },
+    "lastPerformed": {
+      "type": "string",
+      "description": "Date when the workout was last performed (YYYY-MM-DD), use empty string if never performed"
+    }
+  },
+  "required": ["name", "date", "exercises", "lastPerformed"],
+  "additionalProperties": false
+} 
