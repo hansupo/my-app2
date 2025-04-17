@@ -32,9 +32,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Define the colors again here for the initial meta tags
-const lightThemeColor = "#ffffff";
-const darkThemeColor = "#08080a";
 
 export default function RootLayout({
   children,

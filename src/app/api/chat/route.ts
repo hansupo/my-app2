@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     // Validate if the response is actually JSON before sending back (optional but recommended)
     try {
         JSON.parse(assistantMessage); // Try parsing
-    } catch (parseError) {
+    } catch {
         console.error("OpenAI response was not valid JSON:", assistantMessage);
         return NextResponse.json({ error: 'Received invalid JSON response from AI' }, { status: 500 });
     }
